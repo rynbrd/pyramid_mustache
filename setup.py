@@ -11,6 +11,8 @@ readme = os.path.join(here, 'README.md')
 requires = [
     'pyramid>=1.3.0',
     'pystache>=0.5.0']
+testing_extras = [
+    'nose']
 
 setup(
     name = 'pyramid_mustache',
@@ -34,7 +36,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=requires,
-    extras_require = {},
+    extras_require = {
+        'testing': testing_extras},
+    install_requires = requires,
+    tests_require = requires + testing_extras,
     entry_points="")
 
