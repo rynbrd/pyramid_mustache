@@ -31,13 +31,11 @@ setup(
     keywords='web wsgi pylons pyramid mustache',
     author='Ryan Bourgeois',
     author_email='bluedragonx@gmail.com',
-    url='https://github.com/bluedragonx/pyramid_mustache',
+    url='https://github.com/BlueDragonX/pyramid_mustache',
     license='BSD-derived',
-    packages=find_packages(),
-    include_package_data=True,
-    zip_safe=False,
-    extras_require = {
-        'testing': testing_extras},
+    zip_safe = False,
+    packages=find_packages(exclude=['tests']),
+    include_package_data = True,
     install_requires = requires,
     tests_require = requires + testing_extras,
     entry_points="")

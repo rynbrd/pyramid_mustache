@@ -37,7 +37,7 @@ class TestRenderer(TestCase):
         here = os.path.abspath(os.path.dirname(__file__))
         self.templatepath = os.path.join(here, 'templates')
         self.package = DummyPackage('pyramidmustache')
-        self.info = DummyInfo({'name': 'tests/templates/test.mustache',
+        self.info = DummyInfo({'name': '../tests/templates/test.mustache',
             'package': self.package,
             'registry': self.config.registry})
 
