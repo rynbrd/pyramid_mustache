@@ -15,11 +15,11 @@ testing_extras = [
     'nose']
 
 setup(
-    name = 'pyramid_mustache',
-    version = '0.1',
-    description = "Implements support for Mustache templates in Pyramid.",
-    long_description = open(readme).read(),
-    classifiers = [
+    name='pyramid_mustache',
+    version='0.1',
+    description="Implements support for Mustache templates in Pyramid.",
+    long_description=open(readme).read(),
+    classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2",
@@ -33,10 +33,10 @@ setup(
     author_email='bluedragonx@gmail.com',
     url='https://github.com/BlueDragonX/pyramid_mustache',
     license='BSD-derived',
-    zip_safe = False,
+    zip_safe=False,
     packages=find_packages(exclude=['tests']),
-    include_package_data = True,
-    install_requires = requires,
-    tests_require = requires + testing_extras,
+    include_package_data=True,
+    install_requires=requires,
+    tests_require=requires + testing_extras,
     entry_points="")
 

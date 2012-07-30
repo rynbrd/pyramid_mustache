@@ -11,6 +11,7 @@ class DummyPackage:
     """A dummy package object to pass to the renderer."""
 
     def __init__(self, name):
+        """Initialize the package object with a name."""
         self.__name__ = name
 
 
@@ -50,7 +51,7 @@ class TestRenderer(TestCase):
         """Test importing the renderer class."""
         try:
             from pyramidmustache import MustacheRendererFactory
-        except ImportError as e:
+        except ImportError:
             self.assertFalse(True, "failed to import MustacheRendererFactory")
 
     def test_init(self):
