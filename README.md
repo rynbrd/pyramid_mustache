@@ -20,7 +20,7 @@ Usage
 
 Add the following in main() under the project's __init__.py:
 
-  config.add_renderer('.mustache', 'pyramidmustache.MustacheRendererFactory')
+  config.add_renderer('.mustache', 'pyramid_mustache.MustacheRendererFactory')
 
 
 Authors

@@ -37,7 +37,7 @@ class TestRenderer(TestCase):
         self.request.registry = self.config.registry
         here = os.path.abspath(os.path.dirname(__file__))
         self.templatepath = os.path.join(here, 'templates')
-        self.package = DummyPackage('pyramidmustache')
+        self.package = DummyPackage('pyramid_mustache')
         self.info = DummyInfo({'name': '../tests/templates/test.mustache',
             'package': self.package,
             'registry': self.config.registry})
@@ -50,13 +50,13 @@ class TestRenderer(TestCase):
     def test_import(self):
         """Test importing the renderer class."""
         try:
-            from pyramidmustache import MustacheRendererFactory
+            from pyramid_mustache import MustacheRendererFactory
         except ImportError:
             self.assertFalse(True, "failed to import MustacheRendererFactory")
 
     def test_init(self):
         """Test initializing the renderer object."""
-        from pyramidmustache import MustacheRendererFactory
+        from pyramid_mustache import MustacheRendererFactory
         obj = MustacheRendererFactory(self.info)
         self.assertEqual(obj.info, self.info,
             "failed to initialize MustacheRendererFactory object")
@@ -65,7 +65,7 @@ class TestRenderer(TestCase):
         """Test calling the renderer object."""
         data = {'renderer': 'Mustache'}
         output = "This is a test of the %s renderer.\n" % data['renderer']
-        from pyramidmustache import MustacheRendererFactory
+        from pyramid_mustache import MustacheRendererFactory
         obj = MustacheRendererFactory(self.info)
         self.assertEqual(obj(data, {}), output,
             "failed to render template with MustacheRendererFactory")
