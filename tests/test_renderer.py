@@ -3,70 +3,70 @@ Test the MustacheRendererFactory class.
 """
 
 import os
-from unittest import TestCase
+import unittest
+import pyramid_mustache
 from pyramid import testing
-
-class DummyPackage:
-
-    """A dummy package object to pass to the renderer."""
-
-    def __init__(self, name):
-        """Initialize the package object with a name."""
-        self.__name__ = name
+from pyramid_mustache.renderer import MustacheRendererFactory
+from .dummy import DummyPackage, DummyConfig, DummyInfo
 
 
-class DummyInfo:
+class TestRenderer(unittest.TestCase):
 
-    """A dummy info object to pass to the renderer."""
-
-    def __init__(self, kw):
-        """Initialize the info object with some data."""
-        self.__dict__.update(kw)
-        if 'registry' in self.__dict__:
-            self.settings = self.registry.settings
-
-
-class TestRenderer(TestCase):
-
-    """Perform tests on the MustacheRendererFactory class."""
+    """Test the MustacheRendererFactory class."""
 
     def setUp(self):
         """Set up the test case."""
+        here = os.path.abspath(os.path.dirname(__file__))
+        self.settings = {
+            'mustache.templates': os.path.join(here, 'templates')}
+        self.package_name = 'pyramid_mustache'
         self.request = testing.DummyRequest()
         self.config = testing.setUp(request=self.request)
+        self.config.registry.settings = self.settings
         self.request.registry = self.config.registry
-        here = os.path.abspath(os.path.dirname(__file__))
-        self.templatepath = os.path.join(here, 'templates')
-        self.package = DummyPackage('pyramid_mustache')
-        self.info = DummyInfo({'name': '../tests/templates/test.mustache',
+        self.package = DummyPackage(self.package_name)
+        
+        self.template_simple = 'simple'
+        self.info_simple = DummyInfo({
+            'name': self.template_simple + '.mustache',
             'package': self.package,
             'registry': self.config.registry})
 
-    def tearDown(self):
-        """Tear down the test case."""
-        testing.tearDown()
-        del self.config
+        self.template_partial = 'partial_parent'
+        self.info_partial = DummyInfo({
+            'name': self.template_partial + '.mustache',
+            'package': self.package,
+            'registry': self.config.registry})
 
-    def test_import(self):
-        """Test importing the renderer class."""
-        try:
-            from pyramid_mustache import MustacheRendererFactory
-        except ImportError:
-            self.assertFalse(True, "failed to import MustacheRendererFactory")
+    def reset(self):
+        """Reset the session."""
+        pyramid_mustache.session = pyramid_mustache.Session()
 
     def test_init(self):
         """Test initializing the renderer object."""
-        from pyramid_mustache import MustacheRendererFactory
-        obj = MustacheRendererFactory(self.info)
-        self.assertEqual(obj.info, self.info,
-            "failed to initialize MustacheRendererFactory object")
+        pyramid_mustache.session.configure(self.settings)
+        factory = MustacheRendererFactory(self.info_simple)
+        renderer = pyramid_mustache.session.get_renderer(self.package)
+        self.assertEqual(factory.renderer.search_dirs, renderer.search_dirs,
+            'factory.renderer is invalid')
+        self.assertEqual(factory.template, self.template_simple,
+            'factory.template is invalid')
 
-    def test_call(self):
-        """Test calling the renderer object."""
+    def test_call_simple(self):
+        """Test rendering a simple template."""
+        pyramid_mustache.session.configure(self.settings)
         data = {'renderer': 'Mustache'}
-        output = "This is a test of the %s renderer.\n" % data['renderer']
-        from pyramid_mustache import MustacheRendererFactory
-        obj = MustacheRendererFactory(self.info)
-        self.assertEqual(obj(data, {}), output,
-            "failed to render template with MustacheRendererFactory")
+        expected = "Rendered by %s.\n" % data['renderer']
+        factory = MustacheRendererFactory(self.info_simple)
+        self.assertEqual(factory(data, None), expected,
+            'failed to render simple template')
+
+    def test_call_partial(self):
+        """Test rendering a template with partials."""
+        pyramid_mustache.session.configure(self.settings)
+        data = {}
+        expected = "Include a partial.\nThis is a partial.\n"
+        factory = MustacheRendererFactory(self.info_partial)
+        self.assertEqual(factory(data, None), expected,
+            'failed to render template with partials')
 

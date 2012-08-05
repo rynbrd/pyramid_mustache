@@ -18,9 +18,10 @@ Get the source code and install the package:
 Usage
 -----
 
-Add the following in main() under the project's __init__.py:
+Import pyramid_mustache and add the following in main() under the project's
+__init__.py:
 
-  config.add_renderer('.mustache', 'pyramid_mustache.MustacheRendererFactory')
+  pyramid_mustache.configure(config)
 
 
 Authors
