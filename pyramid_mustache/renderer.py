@@ -7,10 +7,19 @@ Define the Pyramid Mustache renderer factory.
 """
 
 import os
+import sys
 import pystache
 import pyramid_mustache
-from pyramid.path import package_path
+from pyramid.path import package_of, package_path
 from pyramid.asset import resolve_asset_spec
+
+def get_package(module):
+    """Return the package that is the parent of module."""
+    if not isinstance(module, basestring):
+        module = module.__name__
+    name = module.split('.')[0]
+    __import__(name)
+    return sys.modules[name]
 
 
 class MustacheRendererFactory:
@@ -20,7 +29,8 @@ class MustacheRendererFactory:
     def __init__(self, info):
         """Initialize the renderer factory."""
         package, name = resolve_asset_spec(info.name)
-        self.renderer = pyramid_mustache.session.get_renderer(info.package)
+        self.renderer = pyramid_mustache.session.get_renderer(
+            get_package(info.package))
         self.template = name[:-9]
 
     def __call__(self, value, system):
