@@ -10,7 +10,8 @@ readme = os.path.join(here, 'README.md')
 
 requires = [
     'pyramid>=1.3.0',
-    'pystache>=0.5.0']
+    'pystache>=0.5.0',
+    'formalchemy>=0.4.0']
 testing_extras = [
     'nose']
 
