@@ -9,7 +9,7 @@ Define the Pyramid Mustache renderer factory.
 import os
 import sys
 import pyramid_mustache
-from pyramid.path import package_of, package_path, caller_package
+from pyramid.path import package_of, package_path, caller_module
 from pyramid.asset import resolve_asset_spec
 from formalchemy.fields import FieldRenderer
 
@@ -48,7 +48,7 @@ class MustacheFieldRenderer(FieldRenderer):
     Renderer a FormAlchemy field using a mustache template.
     """
 
-    def __init__(self, field, template):
+    def __init__(self, field, template, package=None):
         """
         Initialie the field renderer.
 
@@ -57,20 +57,15 @@ class MustacheFieldRenderer(FieldRenderer):
             use when rendering the field.
         """
         FieldRenderer.__init__(self, field)
-        package, name = resolve_asset_spec(template)
+        assetpkg, assetname = resolve_asset_spec(template)
+        if package is None:
+            package = assetpkg
         self.renderer = pyramid_mustache.session.get_renderer(
-            self.get_package(package))
-        parts = name.rsplit('.', 2)
+            get_package(package))
+        parts = assetname.rsplit('.', 2)
         if len(parts) > 1 and parts[1] == 'mustache':
-            name = parts[0]
-        self.template = name
-
-    def get_package(self, package_name):
-        """Get the package where the template is located."""
-        if not package_name:
-            return caller_package()
-        else:
-            return get_package(package_name)
+            assetname = parts[0]
+        self.template = assetname
 
     def render(self, **kwargs):
         """Render the field."""
@@ -81,7 +76,7 @@ class MustacheFieldRenderer(FieldRenderer):
         return self.renderer.render(content, kwargs)
 
     @classmethod
-    def factory(cls, template):
+    def factory(cls, template, package=None):
         """Create a field renderer that uses the given template."""
         class MustacheMetaFieldRenderer(MustacheFieldRenderer):
             """
@@ -89,6 +84,6 @@ class MustacheFieldRenderer(FieldRenderer):
             """
             def __init__(self, field):
                 """Initialize the field renderer."""
-                MustacheFieldRenderer.__init__(self, field, template)
+                MustacheFieldRenderer.__init__(self, field, template, package)
         return MustacheMetaFieldRenderer
 

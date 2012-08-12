@@ -112,7 +112,7 @@ class TestMustacheFieldRenderer(BaseCase):
     def test_init(self):
         """Test the __init__ method."""
         pyramid_mustache.session.configure(self.settings)
-        renderer = MustacheFieldRenderer(self.field, self.template_nopackage)
+        renderer = MustacheFieldRenderer(self.field, self.template_package)
         self.assertIsInstance(renderer.renderer, Renderer,
             'renderer.renderer is invalid')
         self.assertEqual(renderer.template, self.template_nopackage,
@@ -126,17 +126,26 @@ class TestMustacheFieldRenderer(BaseCase):
         self.assertEqual(output, self.output,
             'renderer.render method is invalid')
 
-    def test_render_with_custom(self):
+    def test_render_with_package(self):
         """Test the render method with a package."""
         pyramid_mustache.session.configure(self.settings)
-        renderer = MustacheFieldRenderer(self.field, self.template_nopackage)
+        renderer = MustacheFieldRenderer(self.field, self.template_nopackage, self.package_name)
         output = renderer.render(extra=self.extra)
         self.assertEqual(output, self.output,
             'renderer.render method is invalid')
 
-    def test_factory(self):
+    def test_factory_without_package(self):
         pyramid_mustache.session.configure(self.settings)
-        renderer_class = MustacheFieldRenderer.factory(self.template_nopackage)
+        renderer_class = MustacheFieldRenderer.factory(self.template_package)
+        renderer = renderer_class(self.field)
+        output = renderer.render(extra=self.extra)
+        self.assertEqual(output, self.output,
+            'MustacheFieldRenderer.factory method is invalid')
+
+    def test_factory_with_package(self):
+        pyramid_mustache.session.configure(self.settings)
+        renderer_class = MustacheFieldRenderer.factory(self.template_nopackage,
+            self.package_name)
         renderer = renderer_class(self.field)
         output = renderer.render(extra=self.extra)
         self.assertEqual(output, self.output,
