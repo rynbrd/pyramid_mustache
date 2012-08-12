@@ -116,6 +116,6 @@ class TestModuleFunctions(unittest.TestCase):
         self.assertTrue(pyramid_mustache.session.configured,
             'session.configured is invalid')
         self.assertTrue(config.has_renderer('.mustache',
-            'pyramid_mustache.renderer.MustacheRendererFactory'),
+            'pyramid_mustache.MustacheRendererFactory'),
             'renderer not found in config')
 

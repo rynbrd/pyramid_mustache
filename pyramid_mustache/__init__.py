@@ -9,6 +9,8 @@ The package entry point.
 import os
 from pyramid.path import package_path
 from pystache.renderer import Renderer
+from pyramid_mustache.renderer import (MustacheRendererFactory,
+    MustacheFieldRenderer)
 
 
 class Session:
@@ -59,5 +61,5 @@ def configure(config):
     """Configure Pyramid to use Mustache."""
     session.configure(config.get_settings())
     config.add_renderer('.mustache',
-        'pyramid_mustache.renderer.MustacheRendererFactory')
+        'pyramid_mustache.MustacheRendererFactory')
 
