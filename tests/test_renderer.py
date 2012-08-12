@@ -103,32 +103,40 @@ class TestMustacheFieldRenderer(BaseCase):
         self.fieldset = FieldSet(DummyModel).bind(self.doc)
         self.field = self.fieldset.text
 
-        self.template = 'field'
-        self.template_asset = '%s:%s.mustache' % (self.package_name,
-            self.template)
+        self.template_nopackage = 'field'
+        self.template_package = '%s:%s.mustache' % (self.package_name,
+            self.template_nopackage)
         self.output = "Name: %s-%s-%s\nValue: %s\nExtra: %s\n" % (
             type(self.doc).__name__, self.doc.text, 'text', self.doc.text, self.extra)
 
     def test_init(self):
         """Test the __init__ method."""
         pyramid_mustache.session.configure(self.settings)
-        renderer = MustacheFieldRenderer(self.field, self.template)
+        renderer = MustacheFieldRenderer(self.field, self.template_nopackage)
         self.assertIsInstance(renderer.renderer, Renderer,
             'renderer.renderer is invalid')
-        self.assertEqual(renderer.template, self.template,
+        self.assertEqual(renderer.template, self.template_nopackage,
             'renderer.template is invalid')
 
-    def test_render(self):
-        """Test the render method."""
+    def test_render_without_package(self):
+        """Test the render method without a package."""
         pyramid_mustache.session.configure(self.settings)
-        renderer = MustacheFieldRenderer(self.field, self.template)
+        renderer = MustacheFieldRenderer(self.field, self.template_package)
+        output = renderer.render(extra=self.extra)
+        self.assertEqual(output, self.output,
+            'renderer.render method is invalid')
+
+    def test_render_with_custom(self):
+        """Test the render method with a package."""
+        pyramid_mustache.session.configure(self.settings)
+        renderer = MustacheFieldRenderer(self.field, self.template_nopackage)
         output = renderer.render(extra=self.extra)
         self.assertEqual(output, self.output,
             'renderer.render method is invalid')
 
     def test_factory(self):
         pyramid_mustache.session.configure(self.settings)
-        renderer_class = MustacheFieldRenderer.factory(self.template)
+        renderer_class = MustacheFieldRenderer.factory(self.template_nopackage)
         renderer = renderer_class(self.field)
         output = renderer.render(extra=self.extra)
         self.assertEqual(output, self.output,

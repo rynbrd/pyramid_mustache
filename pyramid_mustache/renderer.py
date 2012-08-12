@@ -9,7 +9,7 @@ Define the Pyramid Mustache renderer factory.
 import os
 import sys
 import pyramid_mustache
-from pyramid.path import package_of, package_path
+from pyramid.path import package_of, package_path, caller_package
 from pyramid.asset import resolve_asset_spec
 from formalchemy.fields import FieldRenderer
 
@@ -59,8 +59,18 @@ class MustacheFieldRenderer(FieldRenderer):
         FieldRenderer.__init__(self, field)
         package, name = resolve_asset_spec(template)
         self.renderer = pyramid_mustache.session.get_renderer(
-            get_package(package))
-        self.template = name.rsplit('.', 2)[0]
+            self.get_package(package))
+        parts = name.rsplit('.', 2)
+        if len(parts) > 1 and parts[1] == 'mustache':
+            name = parts[0]
+        self.template = name
+
+    def get_package(self, package_name):
+        """Get the package where the template is located."""
+        if not package_name:
+            return caller_package()
+        else:
+            return get_package(package_name)
 
     def render(self, **kwargs):
         """Render the field."""
