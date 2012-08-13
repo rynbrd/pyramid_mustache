@@ -6,11 +6,6 @@
 Define some dummy objects.
 """
 
-from sqlalchemy import Column, String
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
-
-
 class DummyPackage:
 
     """
@@ -61,14 +56,4 @@ class DummyInfo:
         self.__dict__.update(kw)
         if 'registry' in self.__dict__:
             self.settings = self.registry.settings
-
-
-class DummyModel(Base):
-
-    """
-    Dummy SqlAlchemy model.
-    """
-
-    __tablename__ = 'dummy'
-    text = Column(String, primary_key=True)
 

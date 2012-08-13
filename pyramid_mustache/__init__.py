@@ -9,8 +9,7 @@ The package entry point.
 import os
 from pyramid.path import package_path
 from pystache.renderer import Renderer
-from pyramid_mustache.renderer import (MustacheRendererFactory,
-    MustacheFieldRenderer)
+from pyramid_mustache.renderer import MustacheRendererFactory
 
 
 class Session:

@@ -7,10 +7,8 @@ import unittest
 import pyramid_mustache
 from pyramid import testing
 from pystache.renderer import Renderer
-from pyramid_mustache.renderer import (MustacheRendererFactory,
-    MustacheFieldRenderer)
-from formalchemy import FieldSet, Field
-from .dummy import DummyPackage, DummyConfig, DummyInfo, DummyModel
+from pyramid_mustache.renderer import MustacheRendererFactory
+from .dummy import DummyPackage, DummyConfig, DummyInfo
 
 
 class BaseCase(unittest.TestCase):
@@ -25,7 +23,6 @@ class BaseCase(unittest.TestCase):
         self.settings = {
             'mustache.templates': os.path.join(here, 'templates')}
         self.package_name = 'pyramid_mustache'
-        self.package = DummyPackage(self.package_name)
 
 
 class TestRenderer(BaseCase):
@@ -42,6 +39,7 @@ class TestRenderer(BaseCase):
         self.config.registry.settings = self.settings
         self.request.registry = self.config.registry
         
+        self.package = DummyPackage(self.package_name)
         self.template_simple = 'simple'
         self.info_simple = DummyInfo({
             'name': self.template_simple + '.mustache',
@@ -85,69 +83,4 @@ class TestRenderer(BaseCase):
         factory = MustacheRendererFactory(self.info_partial)
         self.assertEqual(factory(data, None), expected,
             'failed to render template with partials')
-
-
-class TestMustacheFieldRenderer(BaseCase):
-
-    """
-    Test the MustacheFieldRenderer class.
-    """
-
-    def setUp(self):
-        """Set up the test data."""
-        BaseCase.setUp(self)
-        self.value = 'myvalue'
-        self.extra = 'myextra'
-
-        self.doc = DummyModel(text=self.value)
-        self.fieldset = FieldSet(DummyModel).bind(self.doc)
-        self.field = self.fieldset.text
-
-        self.template_nopackage = 'field'
-        self.template_package = '%s:%s.mustache' % (self.package_name,
-            self.template_nopackage)
-        self.output = "Name: %s-%s-%s\nValue: %s\nExtra: %s\n" % (
-            type(self.doc).__name__, self.doc.text, 'text', self.doc.text, self.extra)
-
-    def test_init(self):
-        """Test the __init__ method."""
-        pyramid_mustache.session.configure(self.settings)
-        renderer = MustacheFieldRenderer(self.field, self.template_package)
-        self.assertIsInstance(renderer.renderer, Renderer,
-            'renderer.renderer is invalid')
-        self.assertEqual(renderer.template, self.template_nopackage,
-            'renderer.template is invalid')
-
-    def test_render_without_package(self):
-        """Test the render method without a package."""
-        pyramid_mustache.session.configure(self.settings)
-        renderer = MustacheFieldRenderer(self.field, self.template_package)
-        output = renderer.render(extra=self.extra)
-        self.assertEqual(output, self.output,
-            'renderer.render method is invalid')
-
-    def test_render_with_package(self):
-        """Test the render method with a package."""
-        pyramid_mustache.session.configure(self.settings)
-        renderer = MustacheFieldRenderer(self.field, self.template_nopackage, self.package_name)
-        output = renderer.render(extra=self.extra)
-        self.assertEqual(output, self.output,
-            'renderer.render method is invalid')
-
-    def test_factory_without_package(self):
-        pyramid_mustache.session.configure(self.settings)
-        renderer_class = MustacheFieldRenderer.factory(self.template_package)
-        renderer = renderer_class(self.field)
-        output = renderer.render(extra=self.extra)
-        self.assertEqual(output, self.output,
-            'MustacheFieldRenderer.factory method is invalid')
-
-    def test_factory_with_package(self):
-        pyramid_mustache.session.configure(self.settings)
-        renderer_class = MustacheFieldRenderer.factory(self.template_nopackage,
-            self.package_name)
-        renderer = renderer_class(self.field)
-        output = renderer.render(extra=self.extra)
-        self.assertEqual(output, self.output,
-            'MustacheFieldRenderer.factory method is invalid')
 
