@@ -13,6 +13,9 @@ from pyramid.path import package_of, package_path
 from pyramid.asset import resolve_asset_spec
 
 
+__all__ = ['MustacheRendererFactory']
+
+
 def get_package(module):
     """Return the package that is the parent of module."""
     if not isinstance(module, basestring):
