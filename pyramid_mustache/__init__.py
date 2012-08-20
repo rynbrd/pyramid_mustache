@@ -12,6 +12,9 @@ from pystache.renderer import Renderer
 from pyramid_mustache.renderer import MustacheRendererFactory
 
 
+__all__ = ['Session', 'session', 'configure']
+
+
 class Session:
 
     """
