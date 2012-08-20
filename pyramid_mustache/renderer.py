@@ -16,6 +16,13 @@ from pyramid.asset import resolve_asset_spec
 __all__ = ['MustacheRendererFactory']
 
 
+# Support use of basestring for Python 3
+try:
+    basestring
+except NameError:
+    basestring = str
+
+
 def get_package(module):
     """Return the package that is the parent of module."""
     if not isinstance(module, basestring):
