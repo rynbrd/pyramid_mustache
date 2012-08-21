@@ -7,7 +7,8 @@ The package entry point.
 """
 
 import os
-from pyramid.path import package_path
+from pyramid.asset import abspath_from_asset_spec
+from pyramid.path import AssetResolver
 from pystache.renderer import Renderer
 from pyramid_mustache.renderer import MustacheRendererFactory
 
@@ -15,45 +16,37 @@ from pyramid_mustache.renderer import MustacheRendererFactory
 __all__ = ['MustacheRendererFactory', 'Session', 'session', 'configure']
 
 
-class Session:
+class Session(object):
 
     """
     Store session information.
     """
 
-    templates_key = 'mustache.templates'
-    templates_default = ['templates']
+    search_key = 'mustache.search'
+    search_default = []
 
     def __init__(self):
         """Initialize the object."""
         self.configured = False
-        self.templates = None
+        self.search = []
 
     def configure(self, settings):
         """Configure the session. Sets the template search path."""
-        if self.templates_key in settings:
-            self.templates = settings[self.templates_key].split(':')
+        if self.search_key in settings:
+            paths = settings[self.search_key].split(',')
         else:
-            self.templates = self.templates_default
+            paths = self.search_default
+        [self.add_search_asset(path) for path in paths]
         self.configured = True
 
-    def get_templates(self, package):
-        """
-        Generate the list of template search paths relative to the given
-        package.
-        """
-        pkgpath = package_path(package)
-        def fixpath(path):
-            if not os.path.isabs(path):
-                path = os.path.join(pkgpath, path)
-            return path
-        return [fixpath(p) for p in self.templates]
+    def add_search_asset(self, asset):
+        """Add a template search directory to the session."""
+        path = os.path.realpath(AssetResolver().resolve(asset).abspath())
+        self.search.append(path)
 
-    def get_renderer(self, package):
-        """
-        Generate a renderer for a package.
-        """
-        return Renderer(search_dirs=self.get_templates(package))
+    def get_renderer(self):
+        """Generate a renderer using the stored search directories."""
+        return Renderer(search_dirs=self.search)
 
 
 session = Session()

@@ -16,22 +16,6 @@ from pyramid.asset import resolve_asset_spec
 __all__ = ['MustacheRendererFactory']
 
 
-# Support use of basestring for Python 3
-try:
-    basestring
-except NameError:
-    basestring = str
-
-
-def get_package(module):
-    """Return the package that is the parent of module."""
-    if not isinstance(module, basestring):
-        module = module.__name__
-    name = module.split('.')[0]
-    __import__(name)
-    return sys.modules[name]
-
-
 class MustacheRendererFactory:
 
     """
@@ -41,8 +25,7 @@ class MustacheRendererFactory:
     def __init__(self, info):
         """Initialize the renderer factory."""
         package, name = resolve_asset_spec(info.name)
-        self.renderer = pyramid_mustache.session.get_renderer(
-            get_package(info.package))
+        self.renderer = pyramid_mustache.session.get_renderer()
         self.template = name.rsplit('.', 2)[0]
 
     def __call__(self, value, system):
