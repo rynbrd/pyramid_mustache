@@ -76,6 +76,17 @@ class TestSession(BaseCase):
         self.assertTrue(session.configured,
             'session.configured is invalid')
 
+    def test_configure_twice(self):
+        """Test calling configure twice."""
+        session = Session()
+        session.configure(self.settings_custom)
+        session.configure(self.settings_custom)
+        self.assertEqual(session.search, self.search_resolved,
+            'session.search is invalid when session.configure is called twice')
+        self.assertTrue(session.configured,
+            'session.configured is invalid when session.configure is called twice')
+
+
     def test_get_renderer_default(self):
         """Test the get_renderer method."""
         session = Session()

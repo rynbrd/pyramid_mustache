@@ -7,7 +7,6 @@ The package entry point.
 """
 
 import os
-from pyramid.asset import abspath_from_asset_spec
 from pyramid.path import AssetResolver
 from pystache.renderer import Renderer
 from pyramid_mustache.renderer import MustacheRendererFactory
@@ -32,6 +31,7 @@ class Session(object):
 
     def configure(self, settings):
         """Configure the session. Sets the template search path."""
+        self.search = []
         if self.search_key in settings:
             paths = settings[self.search_key].split(',')
         else:
