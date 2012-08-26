@@ -16,7 +16,7 @@ from pyramid.asset import resolve_asset_spec
 __all__ = ['MustacheRendererFactory']
 
 
-class MustacheRendererFactory:
+class MustacheRendererFactory(object):
 
     """
     Renderer factory for Mustache templates.
