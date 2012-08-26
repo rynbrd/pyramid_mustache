@@ -6,7 +6,7 @@
 Define some dummy objects.
 """
 
-class DummyPackage:
+class DummyPackage(object):
 
     """
     Dummy Pyramid package class.
@@ -17,7 +17,7 @@ class DummyPackage:
         self.__name__ = name
 
 
-class DummyConfig:
+class DummyConfig(object):
 
     """
     Dummy Pyramid config class.
@@ -45,7 +45,7 @@ class DummyConfig:
         return len(renderers) > 0
 
 
-class DummyInfo:
+class DummyInfo(object):
 
     """
     Dummy pyramid info object.
