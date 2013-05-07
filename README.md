@@ -10,9 +10,9 @@ Installation
 
 Get the source code and install the package:
 
-  git clone git://github.com/BlueDragonX/pyramid_mustache.git
-  cd pyramid_mustache
-  python setup.py install
+    git clone git://github.com/BlueDragonX/pyramid_mustache.git
+    cd pyramid_mustache
+    python setup.py install
 
 
 Usage
@@ -20,8 +20,11 @@ Usage
 
 Add the following in main() under the project's __init__.py:
 
-  config.add_renderer('.mustache', 'pyramid_mustache.MustacheRendererFactory')
+    config.include('pyramid_mustache')
 
+To add a renderer for file extensions other than `.mustache`, like `.mch` for example:
+
+    config.add_renderer('.mch', 'pyramid_mustache.MustacheRendererFactory')
 
 Authors
 -------
