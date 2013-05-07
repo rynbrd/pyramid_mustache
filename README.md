@@ -18,7 +18,7 @@ Get the source code and install the package:
 Usage
 -----
 
-Add the following in main() under the project's __init__.py:
+Add the following to the main() function definition within the project's `__init__.py`:
 
     config.include('pyramid_mustache')
 
