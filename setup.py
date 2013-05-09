@@ -16,7 +16,7 @@ testing_extras = [
 
 setup(
     name='pyramid_mustache',
-    version='0.1.1',
+    version='0.1.0',
     description="Implements support for Mustache templates in Pyramid.",
     long_description=open(readme).read(),
     classifiers=[
