@@ -39,4 +39,3 @@ setup(
     install_requires=requires,
     tests_require=requires + testing_extras,
     entry_points="")
-
