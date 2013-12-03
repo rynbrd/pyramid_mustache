@@ -5,8 +5,8 @@ Package implementing support for Mustache templates in Pyramid.
 import os
 from setuptools import setup, find_packages
 
-# here = os.path.abspath(os.path.dirname(__file__))
-# readme = os.path.join(here, 'README.md')
+here = os.path.abspath(os.path.dirname(__file__))
+readme = os.path.join(here, 'README.md')
 
 requires = [
     'pyramid>=1.3.0',
@@ -18,7 +18,7 @@ setup(
     name='pyramid_mustache',
     version='0.1',
     description="Implements support for Mustache templates in Pyramid.",
-    long_description="This damn readme is breaking stuff",
+    long_description=open(readme).read(),
     classifiers=[
         "Intended Audience :: Developers",
         "Programming Language :: Python",
